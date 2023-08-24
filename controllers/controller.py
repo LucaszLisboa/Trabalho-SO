@@ -18,6 +18,6 @@ class Controller:
     def verificarLogin(self, usuario, senha):
         loginValido = self.modelUser.verificarLogin(usuario, senha)
         if loginValido == True:
-            self.view.exibiTelaSistema()
+            self.view.exibiTelaCadastroProcessos()
         else:
             self.view.exibirMensagem("Usuário ou senha inválidos, tente novamente!")

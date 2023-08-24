@@ -15,7 +15,7 @@ class View:
         self.controller = Controller(self)  
 
         self.root.title("Sistemas Operacionais")
-        self.root.geometry("300x400")
+        self.root.geometry("700x600")
         self.root.resizable(False,False)
         self.container =tk.Frame(self.root)
         self.container.pack()
@@ -26,8 +26,8 @@ class View:
         self.telaRegistro()
         self.telaRegistro.grid(row=0,column=0,sticky="nswe")
 
-        self.telaSistema()
-        self.telaSistema.grid(row=0,column=0,sticky="nswe")
+        self.telaCadastroProcessos()
+        self.telaCadastroProcessos.grid(row=0,column=0,sticky="nswe")
 
         self.exibiTelaInicio()
 
@@ -38,6 +38,9 @@ class View:
 
     def telaLogin(self):
         self.telaLogin =tk.Frame(self.container)
+
+        self.espacoBranco = tk.Frame(self.telaLogin, height=60)
+        self.espacoBranco.grid(row=0)
 
         self.label_titulo = Label(self.telaLogin,text="Sistemas\nOperacionais", font=("Arial",26),padx=30,pady=15,anchor="center",fg="#000000")
         self.label_titulo.grid(row=1)
@@ -102,8 +105,45 @@ class View:
         self.button_cadastrar.configure(fg="White",bg="#55ACEE")
         self.button_cadastrar.grid(row=0,column=1,padx=5)
 
-    def telaSistema(self):
-        self.telaSistema = tk.Frame(self.container)
+    def telaCadastroProcessos(self):
+        self.telaCadastroProcessos = tk.Frame(self.container)
+
+        label_nomeProcesso = Label(self.telaCadastroProcessos, text="Nome do Processo (PID):", font=("Arial",10),padx=50)
+        label_nomeProcesso.grid(row=1,sticky="w")
+        self.entry_nomeProcesso = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
+        self.entry_nomeProcesso.grid(row=2,padx=50,pady=5)
+
+        label_nomeUsuarioUID = Label(self.telaCadastroProcessos, text="Nome do Usuário (UID):", font=("Arial",10),padx=50)
+        label_nomeUsuarioUID.grid(row=3, sticky="w")
+        self.entry_nomeUsuarioUID = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
+        self.entry_nomeUsuarioUID.grid(row=4, padx=50, pady=5)
+
+        label_prioridade = Label(self.telaCadastroProcessos, text="Prioridade:", font=("Arial",10),padx=50)
+        label_prioridade.grid(row=5, sticky="w")
+        prioridades = ["Alta", "Média", "Comum"]
+        self.select_prioridade = ttk.Combobox(self.telaCadastroProcessos, values=prioridades, width=27)
+        self.select_prioridade.grid(row=6, padx=50, pady=5)
+
+        label_usoCPU = Label(self.telaCadastroProcessos, text="Uso da CPU(%):",  font=("Arial",10),padx=50)
+        label_usoCPU.grid(row=7, sticky="w")
+        self.entry_usoCPU = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
+        self.entry_usoCPU.grid(row=8, padx=50, pady=5)
+
+        label_estado = Label(self.telaCadastroProcessos, text="Estado:",  font=("Arial",10),padx=50)
+        label_estado.grid(row=9, sticky="w")
+        estados = ["Pronto", "Execução", "Espera"]
+        self.select_estado = ttk.Combobox(self.telaCadastroProcessos, values=estados, width=27)
+        self.select_estado.grid(row=10, padx=50, pady=5)
+
+        label_espacoMemoria = Label(self.telaCadastroProcessos, text="Espaço de Memória (MB):", font=("Arial",10),padx=50)
+        label_espacoMemoria.grid(row=11, sticky="w")
+        self.entry_espacoMemoria = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
+        self.entry_espacoMemoria.grid(row=12, padx=50, pady=5)
+
+        # BOTÃO CADASTRAR
+        button_cadastrarProcesso = Button(self.telaCadastroProcessos, text="Cadastrar", font=("Arial",11,"bold"),width=10, command=self.cadastrarProcesso)
+        button_cadastrarProcesso.configure(fg="White",bg="#55ACEE")
+        button_cadastrarProcesso.grid(row=13,padx=5, pady=15)
 
     def close(self, evento=None):
         sys.exit()
@@ -116,11 +156,14 @@ class View:
     def exibiTelaRegistro(self):
         self.telaRegistro.tkraise()
 
-    def exibiTelaSistema(self):
-        self.telaSistema.tkraise()
+    def exibiTelaCadastroProcessos(self):
+        self.telaCadastroProcessos.tkraise()
 
     def cadastrar(self):
         self.controller.cadastrarUsuario(self.entry_nomeUsuario.get(),self.entry_novaSenha.get(),self.entry_confirmarSenha.get())
+
+    def cadastrarProcesso(self):
+        print(self)
 
     def exibirMensagem(self, mensagem):
         messagebox.showinfo("Sistemas Operacionais", mensagem)
