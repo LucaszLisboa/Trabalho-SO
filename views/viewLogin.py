@@ -8,11 +8,13 @@ from tkinter import ttk
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from controllers.controller import Controller
+from controllers.controllerProcessos import ControllerProcessos
 
 class View:
     def __init__(self):
         self.root = tk.Tk()
         self.controller = Controller(self)  
+        self.controllerProcessos = ControllerProcessos(self)
 
         self.root.title("Sistemas Operacionais")
         self.root.geometry("700x600")
@@ -108,42 +110,47 @@ class View:
     def telaCadastroProcessos(self):
         self.telaCadastroProcessos = tk.Frame(self.container)
 
-        label_nomeProcesso = Label(self.telaCadastroProcessos, text="Nome do Processo (PID):", font=("Arial",10),padx=50)
+        label_nomeProcesso = Label(self.telaCadastroProcessos, text="Nome do Processo:", font=("Arial",10),padx=50)
         label_nomeProcesso.grid(row=1,sticky="w")
         self.entry_nomeProcesso = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
         self.entry_nomeProcesso.grid(row=2,padx=50,pady=5)
 
+        label_pid = Label(self.telaCadastroProcessos, text="PID:", font=("Arial",10),padx=50)
+        label_pid.grid(row=3, sticky="w")
+        self.entry_pid = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
+        self.entry_pid.grid(row=4, padx=50, pady=5)
+
         label_nomeUsuarioUID = Label(self.telaCadastroProcessos, text="Nome do Usuário (UID):", font=("Arial",10),padx=50)
-        label_nomeUsuarioUID.grid(row=3, sticky="w")
+        label_nomeUsuarioUID.grid(row=5, sticky="w")
         self.entry_nomeUsuarioUID = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
-        self.entry_nomeUsuarioUID.grid(row=4, padx=50, pady=5)
+        self.entry_nomeUsuarioUID.grid(row=6, padx=50, pady=5)
 
         label_prioridade = Label(self.telaCadastroProcessos, text="Prioridade:", font=("Arial",10),padx=50)
-        label_prioridade.grid(row=5, sticky="w")
+        label_prioridade.grid(row=7, sticky="w")
         prioridades = ["Alta", "Média", "Comum"]
         self.select_prioridade = ttk.Combobox(self.telaCadastroProcessos, values=prioridades, width=27)
-        self.select_prioridade.grid(row=6, padx=50, pady=5)
+        self.select_prioridade.grid(row=8, padx=50, pady=5)
 
         label_usoCPU = Label(self.telaCadastroProcessos, text="Uso da CPU(%):",  font=("Arial",10),padx=50)
-        label_usoCPU.grid(row=7, sticky="w")
+        label_usoCPU.grid(row=9, sticky="w")
         self.entry_usoCPU = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
-        self.entry_usoCPU.grid(row=8, padx=50, pady=5)
+        self.entry_usoCPU.grid(row=10, padx=50, pady=5)
 
         label_estado = Label(self.telaCadastroProcessos, text="Estado:",  font=("Arial",10),padx=50)
-        label_estado.grid(row=9, sticky="w")
+        label_estado.grid(row=11, sticky="w")
         estados = ["Pronto", "Execução", "Espera"]
         self.select_estado = ttk.Combobox(self.telaCadastroProcessos, values=estados, width=27)
-        self.select_estado.grid(row=10, padx=50, pady=5)
+        self.select_estado.grid(row=12, padx=50, pady=5)
 
         label_espacoMemoria = Label(self.telaCadastroProcessos, text="Espaço de Memória (MB):", font=("Arial",10),padx=50)
-        label_espacoMemoria.grid(row=11, sticky="w")
+        label_espacoMemoria.grid(row=13, sticky="w")
         self.entry_espacoMemoria = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
-        self.entry_espacoMemoria.grid(row=12, padx=50, pady=5)
+        self.entry_espacoMemoria.grid(row=14, padx=50, pady=5)
 
         # BOTÃO CADASTRAR
         button_cadastrarProcesso = Button(self.telaCadastroProcessos, text="Cadastrar", font=("Arial",11,"bold"),width=10, command=self.cadastrarProcesso)
         button_cadastrarProcesso.configure(fg="White",bg="#55ACEE")
-        button_cadastrarProcesso.grid(row=13,padx=5, pady=15)
+        button_cadastrarProcesso.grid(row=15,padx=5, pady=15)
 
     def close(self, evento=None):
         sys.exit()
@@ -160,10 +167,20 @@ class View:
         self.telaCadastroProcessos.tkraise()
 
     def cadastrar(self):
-        self.controller.cadastrarUsuario(self.entry_nomeUsuario.get(),self.entry_novaSenha.get(),self.entry_confirmarSenha.get())
+        usuario = self.entry_nomeUsuario.get().strip()
+        senha = self.entry_novaSenha.get()
+        confirmacaoSenha = self.entry_confirmarSenha.get()
+        self.controller.cadastrarUsuario(usuario, senha, confirmacaoSenha)
 
     def cadastrarProcesso(self):
-        print(self)
+        nomeProcesso = self.entry_nomeProcesso.get().strip()
+        pid = self.entry_pid.get().strip()
+        nomeUsuarioUID = self.entry_nomeUsuarioUID.get().strip()
+        prioridade = self.select_prioridade.get()
+        usoCPU = self.entry_usoCPU.get().strip()
+        estado = self.select_estado.get()
+        espacoMemoria = self.entry_espacoMemoria.get().strip()
+        self.controllerProcessos.cadastrarProcesso(nomeProcesso, pid, nomeUsuarioUID, prioridade, usoCPU, estado, espacoMemoria)
 
     def exibirMensagem(self, mensagem):
         messagebox.showinfo("Sistemas Operacionais", mensagem)
