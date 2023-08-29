@@ -36,6 +36,7 @@ class View:
         self.root.mainloop()
     
     def exibiTelaInicio(self):
+        self.controllerProcessos.consultarProcessos()
         self.telaLogin.tkraise()
 
     def telaLogin(self):
@@ -184,5 +185,9 @@ class View:
 
     def exibirMensagem(self, mensagem):
         messagebox.showinfo("Sistemas Operacionais", mensagem)
+
+    def update_processos(self, processos):
+        print(processos)
+        ##AQUI
 
 View()

@@ -14,27 +14,36 @@ class ModelProcessos:
         self.db = self.get_database()
 
     def cadastrarProcesso(self, nomeProcesso, pid, nomeUsuarioUID, prioridade, usoCPU, estado, espacoMemoria):
-        self.id = str(ObjectId())
-        self.nomeProcesso = nomeProcesso
-        self.pid = pid
-        self.nomeUsuarioUID = nomeUsuarioUID
-        self.prioridade = prioridade
-        self.usoCPU = usoCPU
-        self.estado = estado
-        self.espacoMemoria = espacoMemoria
-        collection = self.db['processos']
-        processo = {
-            "_id": self.id,
-            "nomeProcesso": self.nomeProcesso,
-            "pid": self.pid,
-            "nomeUsuarioUID": self.nomeUsuarioUID,
-            "prioridade": self.prioridade,
-            "usoCPU": self.usoCPU,
-            "estado": self.estado,
-            "espacoMemoria": self.espacoMemoria
-        }
-        collection.insert_one(processo)
-        return processo   
+        processoRepository = self.db['processos']
+        existeProcesso = processoRepository.find_one({"pid": pid})
+        if existeProcesso:
+            return "processo_ja_cadastrado"
+        else:
+            self.id = str(ObjectId())
+            self.nomeProcesso = nomeProcesso
+            self.pid = pid
+            self.nomeUsuarioUID = nomeUsuarioUID
+            self.prioridade = prioridade
+            self.usoCPU = usoCPU
+            self.estado = estado
+            self.espacoMemoria = espacoMemoria
+            processo = {
+                "_id": self.id,
+                "nomeProcesso": self.nomeProcesso,
+                "pid": self.pid,
+                "nomeUsuarioUID": self.nomeUsuarioUID,
+                "prioridade": self.prioridade,
+                "usoCPU": self.usoCPU,
+                "estado": self.estado,
+                "espacoMemoria": self.espacoMemoria
+            }
+            processoRepository.insert_one(processo)
+            return processo  
+
+    def consultarProcessos(self):
+        processoRepository = self.db['processos'] 
+        processos = processoRepository.find()
+        return processos
         
     def get_database(self):
         CONNECTION_STRING = 'mongodb://localhost:27017'
