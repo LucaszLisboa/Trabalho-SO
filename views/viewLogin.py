@@ -7,20 +7,28 @@ from tkinter import messagebox
 from tkinter import ttk
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from controllers.controller import Controller
+from controllers.controllerUser import ControllerUser
 from controllers.controllerProcessos import ControllerProcessos
 
 class View:
     def __init__(self):
         self.root = tk.Tk()
-        self.controller = Controller(self)  
+        self.controller = ControllerUser(self)  
         self.controllerProcessos = ControllerProcessos(self)
 
         self.root.title("Sistemas Operacionais")
-        self.root.geometry("700x600")
+        self.root.geometry("1000x700")
         self.root.resizable(False,False)
         self.container =tk.Frame(self.root)
         self.container.pack()
+
+        # menubar = tk.Menu(self.container)
+
+        # filemenu = tk.Menu(menubar, tearoff=0)
+        # menubar.add_cascade(label="Inicio", menu=filemenu)
+        # filemenu.add_command(label="Criar Processo")
+        # filemenu.add_command(label="Sair")
+        # self.root.config(menu=menubar)
 
         self.telaLogin()
         self.telaLogin.grid(row=0,column=0,sticky="nswe")
@@ -28,15 +36,17 @@ class View:
         self.telaRegistro()
         self.telaRegistro.grid(row=0,column=0,sticky="nswe")
 
+        self.telaGerenciamento()
+        self.telaGerenciamento.grid(row=0,column=0,sticky="nswe")
+
         self.telaCadastroProcessos()
         self.telaCadastroProcessos.grid(row=0,column=0,sticky="nswe")
 
-        self.exibiTelaInicio()
+        self.exibeTelaInicio()
 
         self.root.mainloop()
     
-    def exibiTelaInicio(self):
-        self.controllerProcessos.consultarProcessos()
+    def exibeTelaInicio(self):
         self.telaLogin.tkraise()
 
     def telaLogin(self):
@@ -66,7 +76,7 @@ class View:
         self.button_entrar.grid(row=6,pady=40)
 
         #ACESSO AO REGISTRO
-        self.button_registrar = Button(self.telaLogin,text="Registrar-se",border=0, font=("Arial",12,"bold"), command=self.exibiTelaRegistro)
+        self.button_registrar = Button(self.telaLogin,text="Registrar-se",border=0, font=("Arial",12,"bold"), command=self.exibeTelaRegistro)
         self.button_registrar.grid(row=7)
 
         self.root.bind('<Escape>', self.close)
@@ -99,7 +109,7 @@ class View:
         self.frameBotoes.grid(row=8,column=0,columnspan=2, pady=30)
 
         # BOTÃO VOLTAR
-        self.button_voltar = Button(self.frameBotoes, text="Voltar", font=("Arial",11,"bold"),width=10,command=self.exibiTelaInicio)
+        self.button_voltar = Button(self.frameBotoes, text="Voltar", font=("Arial",11,"bold"),width=10,command=self.exibeTelaInicio)
         self.button_voltar.configure(fg="White",bg="#9ed1f7")  
         self.button_voltar.grid(row=0,column=0)
 
@@ -107,6 +117,43 @@ class View:
         self.button_cadastrar = Button(self.frameBotoes, text="Cadastrar", font=("Arial",11,"bold"),width=10, command=self.cadastrar)
         self.button_cadastrar.configure(fg="White",bg="#55ACEE")
         self.button_cadastrar.grid(row=0,column=1,padx=5)
+
+    def telaGerenciamento(self):
+        self.telaGerenciamento = tk.Frame(self.container)
+
+        menubar = tk.Menu(self.telaGerenciamento)
+
+        filemenu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Inicio", menu=filemenu)
+        filemenu.add_command(label="Criar Processo", command=self.exibeTelaCadastroProcessos)
+        filemenu.add_command(label="Sair", command=self.exibeTelaGerenciamento)
+        self.root.config(menu=menubar)
+
+        # define columns
+        columns = ('nome', 'pid', 'status', 'nome_de_usuario', 'prioridade', 'cpu', 'espaco_memoria')
+
+        self.tabela = ttk.Treeview(self.telaGerenciamento, columns=columns, show='headings', height=30, selectmode=tk.BROWSE)
+
+        # define headings
+        self.tabela.heading('nome', text='Nome')
+        self.tabela.heading('pid', text='PID')
+        self.tabela.column('pid', width=120)
+        self.tabela.heading('status', text='Status')
+        self.tabela.column('status', width=120)
+        self.tabela.heading('nome_de_usuario', text='Nome de usuário')
+        self.tabela.heading('prioridade', text= 'Prioridade')
+        self.tabela.column('prioridade', width=120)
+        self.tabela.heading('cpu', text='CPU')
+        self.tabela.column('cpu', width=120)    
+        self.tabela.heading('espaco_memoria', text='Espaço memória')
+        self.tabela.column('espaco_memoria', width=120)
+        self.tabela.bind('<<TreeviewSelect>>')
+        self.tabela.grid()
+
+        self.popularTabela()
+
+        buttonDeleteProcesso = ttk.Button(self.telaGerenciamento, text='Delete', command=self.deletarProcesso)
+        buttonDeleteProcesso.grid()
 
     def telaCadastroProcessos(self):
         self.telaCadastroProcessos = tk.Frame(self.container)
@@ -129,7 +176,7 @@ class View:
         label_prioridade = Label(self.telaCadastroProcessos, text="Prioridade:", font=("Arial",10),padx=50)
         label_prioridade.grid(row=7, sticky="w")
         prioridades = ["Alta", "Média", "Comum"]
-        self.select_prioridade = ttk.Combobox(self.telaCadastroProcessos, values=prioridades, width=27)
+        self.select_prioridade = ttk.Combobox(self.telaCadastroProcessos, values=prioridades, width=27, state= 'readonly')
         self.select_prioridade.grid(row=8, padx=50, pady=5)
 
         label_usoCPU = Label(self.telaCadastroProcessos, text="Uso da CPU(%):",  font=("Arial",10),padx=50)
@@ -140,7 +187,7 @@ class View:
         label_estado = Label(self.telaCadastroProcessos, text="Estado:",  font=("Arial",10),padx=50)
         label_estado.grid(row=11, sticky="w")
         estados = ["Pronto", "Execução", "Espera"]
-        self.select_estado = ttk.Combobox(self.telaCadastroProcessos, values=estados, width=27)
+        self.select_estado = ttk.Combobox(self.telaCadastroProcessos, values=estados, width=27, state= 'readonly')
         self.select_estado.grid(row=12, padx=50, pady=5)
 
         label_espacoMemoria = Label(self.telaCadastroProcessos, text="Espaço de Memória (MB):", font=("Arial",10),padx=50)
@@ -161,11 +208,16 @@ class View:
         senha = self.entry_senha.get()
         self.controller.verificarLogin(usuario, senha)
 
-    def exibiTelaRegistro(self):
+    def exibeTelaRegistro(self):
         self.telaRegistro.tkraise()
 
-    def exibiTelaCadastroProcessos(self):
+    def exibeTelaCadastroProcessos(self):
+        self.limparCamposCadastroProcesso()
         self.telaCadastroProcessos.tkraise()
+
+    def exibeTelaGerenciamento(self):
+        self.popularTabela()
+        self.telaGerenciamento.tkraise()
 
     def cadastrar(self):
         usuario = self.entry_nomeUsuario.get().strip()
@@ -182,12 +234,38 @@ class View:
         estado = self.select_estado.get()
         espacoMemoria = self.entry_espacoMemoria.get().strip()
         self.controllerProcessos.cadastrarProcesso(nomeProcesso, pid, nomeUsuarioUID, prioridade, usoCPU, estado, espacoMemoria)
+        self.limparCamposCadastroProcesso()
+
+    def popularTabela(self):
+        self.tabela.delete(*self.tabela.get_children())
+        processos = self.controllerProcessos.consultarProcessos()
+        for processo in processos:
+            nomeProcesso = processo['nomeProcesso']
+            PID = processo['pid']
+            status = processo['estado']
+            nomeUsuarioUID = processo['nomeUsuarioUID']
+            prioridade = processo['prioridade']
+            usoCPU = processo['usoCPU']
+            espacoMemoria = processo['espacoMemoria']
+            self.tabela.insert("", "end", values=(nomeProcesso, PID, status, nomeUsuarioUID, prioridade, usoCPU, espacoMemoria))
+
+    def deletarProcesso(self):
+        selecionado = self.tabela.focus()
+        detalhesProcesso = self.tabela.item(selecionado)
+        pid = detalhesProcesso.get('values')[1]
+        print(pid)
+        self.controllerProcessos.deletarProcesso(pid)
+
+    def limparCamposCadastroProcesso(self):
+        self.entry_nomeProcesso.delete(0, 'end')
+        self.entry_pid.delete(0, 'end')
+        self.entry_nomeUsuarioUID.delete(0, 'end')
+        self.select_prioridade.set('')
+        self.entry_usoCPU.delete(0, 'end')
+        self.select_estado.set('')
+        self.entry_espacoMemoria.delete(0, 'end')
 
     def exibirMensagem(self, mensagem):
         messagebox.showinfo("Sistemas Operacionais", mensagem)
-
-    def update_processos(self, processos):
-        print(processos)
-        ##AQUI
 
 View()

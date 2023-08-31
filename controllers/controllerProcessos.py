@@ -11,9 +11,14 @@ class ControllerProcessos:
             self.view.exibirMensagem("Processo com PID já cadastrado, tente novamente!")
         else:
             self.view.exibirMensagem("Processo cadastrado com sucesso!")
-            self.view.exibiTelaInicio()
-            # self.view.update_UI(processo)
+            self.view.exibeTelaGerenciamento()
 
     def consultarProcessos(self):
         processos = self.modelProcessos.consultarProcessos()
-        self.view.update_processos(processos)
+        return processos
+    
+    def deletarProcesso(self, pid):
+        deleted_count = self.modelProcessos.deletarProcesso(pid)
+        if(deleted_count == 1):
+            self.view.exibirMensagem('Processo deletado com sucesso!')
+            self.view.popularTabela()

@@ -1,6 +1,6 @@
 from models.modelUser import ModelUser
 
-class Controller:
+class ControllerUser:
     def __init__(self, view):
         self.modelUser = ModelUser()
         self.view = view
@@ -18,6 +18,6 @@ class Controller:
     def verificarLogin(self, usuario, senha):
         loginValido = self.modelUser.verificarLogin(usuario, senha)
         if loginValido == True:
-            self.view.exibiTelaCadastroProcessos()
+            self.view.exibeTelaGerenciamento()
         else:
             self.view.exibirMensagem("Usuário ou senha inválidos, tente novamente!")

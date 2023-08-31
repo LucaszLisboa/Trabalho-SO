@@ -44,6 +44,13 @@ class ModelProcessos:
         processoRepository = self.db['processos'] 
         processos = processoRepository.find()
         return processos
+    
+    def deletarProcesso(self, pid):
+        pid = str(pid)
+        processoRepository = self.db['processos']
+        result = processoRepository.delete_one({"pid": pid})
+        return result.deleted_count
+
         
     def get_database(self):
         CONNECTION_STRING = 'mongodb://localhost:27017'
