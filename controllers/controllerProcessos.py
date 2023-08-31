@@ -7,11 +7,11 @@ class ControllerProcessos:
 
     def cadastrarProcesso(self, nomeProcesso, pid, nomeUsuarioUID, prioridade, usoCPU, estado, espacoMemoria):
         processo = self.modelProcessos.cadastrarProcesso(nomeProcesso, pid, nomeUsuarioUID, prioridade, usoCPU, estado, espacoMemoria)
-        if processo == "processo_ja_cadastrado":
-            self.view.exibirMensagem("Processo com PID já cadastrado, tente novamente!")
+        if processo == 1:
+            self.view.exibirMensagem("Processo atualizado com sucesso!")
         else:
             self.view.exibirMensagem("Processo cadastrado com sucesso!")
-            self.view.exibeTelaGerenciamento()
+        self.view.exibeTelaGerenciamento()
 
     def consultarProcessos(self):
         processos = self.modelProcessos.consultarProcessos()
@@ -22,3 +22,9 @@ class ControllerProcessos:
         if(deleted_count == 1):
             self.view.exibirMensagem('Processo deletado com sucesso!')
             self.view.popularTabela()
+
+    def editarProcesso(self, processo):
+        if processo[1]:
+            self.view.popularEdicaoProcesso(processo)
+        else:
+            self.view.exibirMensagem('Selecione um processo para editar!')

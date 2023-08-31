@@ -13,7 +13,7 @@ class ControllerUser:
             self.view.exibirMensagem("Usuário já cadastrado, tente novamente!")
         else:
             self.view.exibirMensagem("Usuário cadastrado com sucesso!")
-            self.view.exibiTelaInicio()
+            self.view.exibeTelaInicio()
 
     def verificarLogin(self, usuario, senha):
         loginValido = self.modelUser.verificarLogin(usuario, senha)

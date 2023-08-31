@@ -17,18 +17,10 @@ class View:
         self.controllerProcessos = ControllerProcessos(self)
 
         self.root.title("Sistemas Operacionais")
-        self.root.geometry("1000x700")
+        self.root.geometry("1000x680")
         self.root.resizable(False,False)
         self.container =tk.Frame(self.root)
         self.container.pack()
-
-        # menubar = tk.Menu(self.container)
-
-        # filemenu = tk.Menu(menubar, tearoff=0)
-        # menubar.add_cascade(label="Inicio", menu=filemenu)
-        # filemenu.add_command(label="Criar Processo")
-        # filemenu.add_command(label="Sair")
-        # self.root.config(menu=menubar)
 
         self.telaLogin()
         self.telaLogin.grid(row=0,column=0,sticky="nswe")
@@ -47,6 +39,8 @@ class View:
         self.root.mainloop()
     
     def exibeTelaInicio(self):
+        self.entry_usuario.delete(0, 'end')
+        self.entry_senha.delete(0, 'end')
         self.telaLogin.tkraise()
 
     def telaLogin(self):
@@ -72,7 +66,7 @@ class View:
 
         # BOTÃO ENTRAR
         self.button_entrar = Button(self.telaLogin, text="ENTRAR", font=("Arial",12,"bold"),compound="center", command=self.verificarLogin)
-        self.button_entrar.configure(fg="White",bg="#55ACEE", width=14)   # PAD TAMANHO DE DENTRO 
+        self.button_entrar.configure(fg="White",bg="#3f9eeb", width=14)   # PAD TAMANHO DE DENTRO 
         self.button_entrar.grid(row=6,pady=40)
 
         #ACESSO AO REGISTRO
@@ -110,12 +104,12 @@ class View:
 
         # BOTÃO VOLTAR
         self.button_voltar = Button(self.frameBotoes, text="Voltar", font=("Arial",11,"bold"),width=10,command=self.exibeTelaInicio)
-        self.button_voltar.configure(fg="White",bg="#9ed1f7")  
+        self.button_voltar.configure(fg="White",bg="#9c9c9c")  
         self.button_voltar.grid(row=0,column=0)
 
         # BOTÃO CADASTRAR
         self.button_cadastrar = Button(self.frameBotoes, text="Cadastrar", font=("Arial",11,"bold"),width=10, command=self.cadastrar)
-        self.button_cadastrar.configure(fg="White",bg="#55ACEE")
+        self.button_cadastrar.configure(fg="White",bg="#3f9eeb")
         self.button_cadastrar.grid(row=0,column=1,padx=5)
 
     def telaGerenciamento(self):
@@ -125,8 +119,9 @@ class View:
 
         filemenu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Inicio", menu=filemenu)
+        filemenu.add_command(label="Processos", command=self.exibeTelaGerenciamento)
         filemenu.add_command(label="Criar Processo", command=self.exibeTelaCadastroProcessos)
-        filemenu.add_command(label="Sair", command=self.exibeTelaGerenciamento)
+        filemenu.add_command(label="Sair", command=self.exibeTelaInicio)
         self.root.config(menu=menubar)
 
         # define columns
@@ -151,9 +146,12 @@ class View:
         self.tabela.grid()
 
         self.popularTabela()
+        buttonEditarProcesso = ttk.Button(self.telaGerenciamento, text='Editar', command=self.editarProcesso)
+        buttonEditarProcesso.grid()
 
-        buttonDeleteProcesso = ttk.Button(self.telaGerenciamento, text='Delete', command=self.deletarProcesso)
+        buttonDeleteProcesso = ttk.Button(self.telaGerenciamento, text='Excluir', command=self.deletarProcesso)
         buttonDeleteProcesso.grid()
+
 
     def telaCadastroProcessos(self):
         self.telaCadastroProcessos = tk.Frame(self.container)
@@ -253,8 +251,13 @@ class View:
         selecionado = self.tabela.focus()
         detalhesProcesso = self.tabela.item(selecionado)
         pid = detalhesProcesso.get('values')[1]
-        print(pid)
         self.controllerProcessos.deletarProcesso(pid)
+
+    def editarProcesso(self):
+        selecionado = self.tabela.focus()
+        detalhesProcesso = self.tabela.item(selecionado)
+        processo = detalhesProcesso.get('values')
+        self.controllerProcessos.editarProcesso(processo)
 
     def limparCamposCadastroProcesso(self):
         self.entry_nomeProcesso.delete(0, 'end')
@@ -267,5 +270,17 @@ class View:
 
     def exibirMensagem(self, mensagem):
         messagebox.showinfo("Sistemas Operacionais", mensagem)
+
+    def popularEdicaoProcesso(self, processo):
+        self.exibeTelaCadastroProcessos()
+        self.entry_nomeProcesso.insert(0, processo[0])
+        self.entry_pid.insert(0, processo[1])
+        self.entry_nomeUsuarioUID.insert(0, processo[3])
+        self.select_prioridade.set(processo[4])
+        self.entry_usoCPU.insert(0, processo[5])
+        self.select_estado.set(processo[2])
+        self.entry_espacoMemoria.insert(0, processo[6])
+
+
 
 View()

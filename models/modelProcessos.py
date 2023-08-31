@@ -17,7 +17,8 @@ class ModelProcessos:
         processoRepository = self.db['processos']
         existeProcesso = processoRepository.find_one({"pid": pid})
         if existeProcesso:
-            return "processo_ja_cadastrado"
+            modified_count = self.editarProcesso(nomeProcesso, pid, nomeUsuarioUID, prioridade, usoCPU, estado, espacoMemoria)
+            return modified_count
         else:
             self.id = str(ObjectId())
             self.nomeProcesso = nomeProcesso
@@ -50,6 +51,23 @@ class ModelProcessos:
         processoRepository = self.db['processos']
         result = processoRepository.delete_one({"pid": pid})
         return result.deleted_count
+    
+    def editarProcesso(self, nomeProcesso, pid, nomeUsuarioUID, prioridade, usoCPU, estado, espacoMemoria):
+        pid = str(pid)
+        processoRepository = self.db['processos']
+        processo = processoRepository.find_one({"pid": pid})
+        newProcesso = { "$set": { 
+            "nomeProcesso": nomeProcesso, 
+            "nomeUsuarioUID":nomeUsuarioUID, 
+            "prioridade": prioridade,
+            "usoCPU": usoCPU,
+            "estado": estado,
+            "espacoMemoria": espacoMemoria
+            } 
+        }
+        result = processoRepository.update_one(processo, newProcesso)
+        return result.modified_count
+    
 
         
     def get_database(self):
