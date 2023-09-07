@@ -46,20 +46,20 @@ class View:
     def telaLogin(self):
         self.telaLogin =tk.Frame(self.container)
 
-        self.espacoBranco = tk.Frame(self.telaLogin, height=60)
-        self.espacoBranco.grid(row=0)
+        #self.espacoBranco = tk.Frame(self.telaLogin, height=60)
+        #self.espacoBranco.grid(row=0)
 
-        self.label_titulo = Label(self.telaLogin,text="Sistemas\nOperacionais", font=("Arial",26),padx=30,pady=15,anchor="center",fg="#000000")
+        self.label_titulo = Label(self.telaLogin,text="Sistemas\nOperacionais", font=("Arial",26),padx=30,pady=50,anchor="center",fg="#000000")
         self.label_titulo.grid(row=1)
 
         # NOME DO USUARIO
-        self.label_usuario = Label(self.telaLogin, text="Usuario", font=("Arial",12,"bold"),padx=50)
+        self.label_usuario = Label(self.telaLogin, text="Usuario", font=("Arial",12,"bold"),padx=450)
         self.label_usuario.grid(row=2,sticky="w")
         self.entry_usuario = Entry(self.telaLogin,font= 11, width=20,highlightbackground="#000000",highlightthickness=0.5)
         self.entry_usuario.grid(row=3,padx=50,pady=2)
 
         # SENHA DO USUARIO
-        self.label_senha = Label(self.telaLogin, text="Senha", font=("Arial",12,"bold"),padx=50)
+        self.label_senha = Label(self.telaLogin, text="Senha", font=("Arial",12,"bold"),padx=450)
         self.label_senha.grid(row=4,sticky="w")
         self.entry_senha = Entry(self.telaLogin, width=20,font= 11,highlightbackground="#000000",highlightthickness=0.5,show="•")
         self.entry_senha.grid(row=5,padx=50,pady=2)
@@ -156,47 +156,50 @@ class View:
     def telaCadastroProcessos(self):
         self.telaCadastroProcessos = tk.Frame(self.container)
 
-        label_nomeProcesso = Label(self.telaCadastroProcessos, text="Nome do Processo:", font=("Arial",10),padx=50)
+        label_embranco = Label(self.telaCadastroProcessos, font=("Arial",10),padx=400)
+        label_embranco.grid(row=0,sticky="w",pady=20)
+
+        label_nomeProcesso = Label(self.telaCadastroProcessos, text="Nome do Processo:", font=("Arial",10),padx=400)
         label_nomeProcesso.grid(row=1,sticky="w")
         self.entry_nomeProcesso = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
-        self.entry_nomeProcesso.grid(row=2,padx=50,pady=5)
+        self.entry_nomeProcesso.grid(row=2,padx=400,pady=10)
 
-        label_pid = Label(self.telaCadastroProcessos, text="PID:", font=("Arial",10),padx=50)
+        label_pid = Label(self.telaCadastroProcessos, text="PID:", font=("Arial",10),padx=400)
         label_pid.grid(row=3, sticky="w")
         self.entry_pid = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
-        self.entry_pid.grid(row=4, padx=50, pady=5)
+        self.entry_pid.grid(row=4, padx=400, pady=10)
 
-        label_nomeUsuarioUID = Label(self.telaCadastroProcessos, text="Nome do Usuário (UID):", font=("Arial",10),padx=50)
+        label_nomeUsuarioUID = Label(self.telaCadastroProcessos, text="Nome do Usuário (UID):", font=("Arial",10),padx=400)
         label_nomeUsuarioUID.grid(row=5, sticky="w")
         self.entry_nomeUsuarioUID = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
-        self.entry_nomeUsuarioUID.grid(row=6, padx=50, pady=5)
+        self.entry_nomeUsuarioUID.grid(row=6, padx=400, pady=10)
 
-        label_prioridade = Label(self.telaCadastroProcessos, text="Prioridade:", font=("Arial",10),padx=50)
+        label_prioridade = Label(self.telaCadastroProcessos, text="Prioridade:", font=("Arial",10),padx=400)
         label_prioridade.grid(row=7, sticky="w")
         prioridades = ["Alta", "Média", "Comum"]
         self.select_prioridade = ttk.Combobox(self.telaCadastroProcessos, values=prioridades, width=27, state= 'readonly')
-        self.select_prioridade.grid(row=8, padx=50, pady=5)
+        self.select_prioridade.grid(row=8, padx=400, pady=10)
 
-        label_usoCPU = Label(self.telaCadastroProcessos, text="Uso da CPU(%):",  font=("Arial",10),padx=50)
+        label_usoCPU = Label(self.telaCadastroProcessos, text="Uso da CPU(%):",  font=("Arial",10),padx=400)
         label_usoCPU.grid(row=9, sticky="w")
         self.entry_usoCPU = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
-        self.entry_usoCPU.grid(row=10, padx=50, pady=5)
+        self.entry_usoCPU.grid(row=10, padx=400, pady=10)
 
-        label_estado = Label(self.telaCadastroProcessos, text="Estado:",  font=("Arial",10),padx=50)
+        label_estado = Label(self.telaCadastroProcessos, text="Estado:",  font=("Arial",10),padx=400)
         label_estado.grid(row=11, sticky="w")
         estados = ["Pronto", "Execução", "Espera"]
         self.select_estado = ttk.Combobox(self.telaCadastroProcessos, values=estados, width=27, state= 'readonly')
-        self.select_estado.grid(row=12, padx=50, pady=5)
+        self.select_estado.grid(row=12, padx=400, pady=10)
 
-        label_espacoMemoria = Label(self.telaCadastroProcessos, text="Espaço de Memória (MB):", font=("Arial",10),padx=50)
+        label_espacoMemoria = Label(self.telaCadastroProcessos, text="Espaço de Memória (MB):", font=("Arial",10),padx=400)
         label_espacoMemoria.grid(row=13, sticky="w")
         self.entry_espacoMemoria = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
-        self.entry_espacoMemoria.grid(row=14, padx=50, pady=5)
+        self.entry_espacoMemoria.grid(row=14, padx=400, pady=10)
 
         # BOTÃO CADASTRAR
         button_cadastrarProcesso = Button(self.telaCadastroProcessos, text="Cadastrar", font=("Arial",11,"bold"),width=10, command=self.cadastrarProcesso)
         button_cadastrarProcesso.configure(fg="White",bg="#55ACEE")
-        button_cadastrarProcesso.grid(row=15,padx=5, pady=15)
+        button_cadastrarProcesso.grid(row=15,padx=15, pady=15)
 
     def close(self, evento=None):
         sys.exit()
