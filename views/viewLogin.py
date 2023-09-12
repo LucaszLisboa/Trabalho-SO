@@ -79,25 +79,25 @@ class View:
         self.telaRegistro = tk.Frame(self.container)
 
         self.espacoBranco = tk.Frame(self.telaRegistro, height=60)
-        self.espacoBranco.grid(row=0)
+        self.espacoBranco.grid(row=0,pady=40)
 
         # NOME DO USUARIO
-        self.label_nomeUsuario = Label(self.telaRegistro, text="Nome do Usuario:", font=("Arial",12,"bold"),padx=50)
+        self.label_nomeUsuario = Label(self.telaRegistro, text="Nome do Usuario:", font=("Arial",12,"bold"),padx=420)
         self.label_nomeUsuario.grid(row=1,sticky="w")
         self.entry_nomeUsuario = Entry(self.telaRegistro, width=20,highlightthickness=0.5, highlightbackground="black",font=12)
-        self.entry_nomeUsuario.grid(row=2,padx=50,pady=5)
+        self.entry_nomeUsuario.grid(row=2,padx=420,pady=10)
 
         # NOVA SENHA  
-        self.label_novaSenha = Label(self.telaRegistro, text="Nova Senha:", font=("Arial",12,"bold"),padx=50)
+        self.label_novaSenha = Label(self.telaRegistro, text="Nova Senha:", font=("Arial",12,"bold"),padx=420)
         self.label_novaSenha.grid(row=4,sticky="w")
         self.entry_novaSenha = Entry(self.telaRegistro, width=20,highlightthickness=0.5,highlightbackground="black", font=10, show="•")
-        self.entry_novaSenha.grid(row=5, padx=50,pady=5)
+        self.entry_novaSenha.grid(row=5, padx=420,pady=10)
 
         # CONFIRMAÇÃO DA NOVA SENHA
-        self.label_confirmarSenha = Label(self.telaRegistro, text="Confirmar Senha:", font=("Arial",12,"bold"),padx=50)
+        self.label_confirmarSenha = Label(self.telaRegistro, text="Confirmar Senha:", font=("Arial",12,"bold"),padx=420)
         self.label_confirmarSenha.grid(row=6,sticky="w")
         self.entry_confirmarSenha = Entry(self.telaRegistro,highlightthickness=0.5,font=10, highlightbackground="black", show="•")
-        self.entry_confirmarSenha.grid(row=7,padx=50,pady=5)
+        self.entry_confirmarSenha.grid(row=7,padx=420,pady=10)
 
         self.frameBotoes = tk.Frame(self.telaRegistro)
         self.frameBotoes.grid(row=8,column=0,columnspan=2, pady=30)
@@ -113,16 +113,17 @@ class View:
         self.button_cadastrar.grid(row=0,column=1,padx=5)
 
     def telaGerenciamento(self):
+
         self.telaGerenciamento = tk.Frame(self.container)
-
         menubar = tk.Menu(self.telaGerenciamento)
-
         filemenu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Inicio", menu=filemenu)
         filemenu.add_command(label="Processos", command=self.exibeTelaGerenciamento)
         filemenu.add_command(label="Criar Processo", command=self.exibeTelaCadastroProcessos)
         filemenu.add_command(label="Sair", command=self.exibeTelaInicio)
         self.root.config(menu=menubar)
+
+
 
         # define columns
         columns = ('nome', 'pid', 'status', 'nome_de_usuario', 'prioridade', 'cpu', 'espaco_memoria')
@@ -283,7 +284,5 @@ class View:
         self.entry_usoCPU.insert(0, processo[5])
         self.select_estado.set(processo[2])
         self.entry_espacoMemoria.insert(0, processo[6])
-
-
 
 View()
