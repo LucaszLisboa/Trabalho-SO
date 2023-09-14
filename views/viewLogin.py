@@ -193,10 +193,14 @@ class View:
         self.entry_espacoMemoria = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
         self.entry_espacoMemoria.grid(row=14, padx=400, pady=10)
 
+        button_voltar = Button(self.telaCadastroProcessos, text="Voltar", font=("Arial",11,"bold"),width=10,command=self.exibeTelaGerenciamento)
+        button_voltar.configure(fg="White",bg="#9c9c9c")  
+        button_voltar.grid(row=15,padx=15,pady=15)
+
         # BOTÃO CADASTRAR
         button_cadastrarProcesso = Button(self.telaCadastroProcessos, text="Cadastrar", font=("Arial",11,"bold"),width=10, command=self.cadastrarProcesso)
-        button_cadastrarProcesso.configure(fg="White",bg="#55ACEE")
-        button_cadastrarProcesso.grid(row=15,padx=15, pady=15)
+        button_cadastrarProcesso.configure(fg="White",bg="#3f9eeb")
+        button_cadastrarProcesso.grid(row=16,padx=15)
 
     def close(self, evento=None):
         sys.exit()
