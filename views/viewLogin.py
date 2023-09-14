@@ -14,7 +14,7 @@ class View:
     def __init__(self):
         self.root = tk.Tk()
         self.controller = ControllerUser(self)  
-        self.controllerProcessos = ControllerProcessos(self)
+        self.controllerProcessos = ControllerProcessos(self)    
 
         self.root.title("Sistemas Operacionais")
         self.root.geometry("1000x680")
@@ -115,15 +115,6 @@ class View:
     def telaGerenciamento(self):
 
         self.telaGerenciamento = tk.Frame(self.container)
-        menubar = tk.Menu(self.telaGerenciamento)
-        filemenu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Inicio", menu=filemenu)
-        filemenu.add_command(label="Processos", command=self.exibeTelaGerenciamento)
-        filemenu.add_command(label="Criar Processo", command=self.exibeTelaCadastroProcessos)
-        filemenu.add_command(label="Sair", command=self.exibeTelaInicio)
-        self.root.config(menu=menubar)
-
-
 
         # define columns
         columns = ('nome', 'pid', 'status', 'nome_de_usuario', 'prioridade', 'cpu', 'espaco_memoria')
@@ -144,14 +135,19 @@ class View:
         self.tabela.heading('espaco_memoria', text='Espaço memória')
         self.tabela.column('espaco_memoria', width=120)
         self.tabela.bind('<<TreeviewSelect>>')
-        self.tabela.grid()
+        self.tabela.grid(row=0, column=0, columnspan=3)
 
         self.popularTabela()
+
+        
+        buttonCriarProcesso = ttk.Button(self.telaGerenciamento, text='Criar', command=self.exibeTelaCadastroProcessos)
+        buttonCriarProcesso.grid(row=1, column=0, padx=5,pady=10)
+
         buttonEditarProcesso = ttk.Button(self.telaGerenciamento, text='Editar', command=self.editarProcesso)
-        buttonEditarProcesso.grid()
+        buttonEditarProcesso.grid(row=1, column=1, padx=5,pady=10)
 
         buttonDeleteProcesso = ttk.Button(self.telaGerenciamento, text='Excluir', command=self.deletarProcesso)
-        buttonDeleteProcesso.grid()
+        buttonDeleteProcesso.grid(row=1, column=2, padx=5,pady=10)
 
 
     def telaCadastroProcessos(self):
