@@ -14,6 +14,8 @@ class ModelProcessos:
         self.db = self.get_database()
 
     def cadastrarProcesso(self, nomeProcesso, pid, nomeUsuarioUID, prioridade, usoCPU, estado, espacoMemoria):
+        if(pid == '' or nomeProcesso == '' or nomeUsuarioUID == '' or prioridade == '' or usoCPU == '' or estado == '' or espacoMemoria == ''):
+            return 0
         processoRepository = self.db['processos']
         existeProcesso = processoRepository.find_one({"pid": pid})
         if existeProcesso:

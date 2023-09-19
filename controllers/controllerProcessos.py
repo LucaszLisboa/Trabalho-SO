@@ -7,11 +7,15 @@ class ControllerProcessos:
 
     def cadastrarProcesso(self, nomeProcesso, pid, nomeUsuarioUID, prioridade, usoCPU, estado, espacoMemoria):
         processo = self.modelProcessos.cadastrarProcesso(nomeProcesso, pid, nomeUsuarioUID, prioridade, usoCPU, estado, espacoMemoria)
-        if processo == 1:
+        if processo == 0:
+            self.view.exibirMensagem("Preencha todos os campos!")
+            return
+        elif processo == 1:
             self.view.exibirMensagem("Processo atualizado com sucesso!")
         else:
             self.view.exibirMensagem("Processo cadastrado com sucesso!")
         self.view.exibeTelaGerenciamento()
+        self.view.limparCamposCadastroProcesso()
 
     def consultarProcessos(self):
         processos = self.modelProcessos.consultarProcessos()
@@ -26,5 +30,3 @@ class ControllerProcessos:
     def editarProcesso(self, processo):
         if processo[1]:
             self.view.popularEdicaoProcesso(processo)
-        else:
-            self.view.exibirMensagem('Selecione um processo para editar!')

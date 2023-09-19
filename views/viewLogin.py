@@ -49,68 +49,68 @@ class View:
         #self.espacoBranco = tk.Frame(self.telaLogin, height=60)
         #self.espacoBranco.grid(row=0)
 
-        self.label_titulo = Label(self.telaLogin,text="Sistemas\nOperacionais", font=("Arial",26),padx=30,pady=50,anchor="center",fg="#000000")
-        self.label_titulo.grid(row=1)
+        label_titulo = Label(self.telaLogin,text="Sistemas\nOperacionais", font=("Arial",26),padx=30,pady=50,anchor="center",fg="#000000")
+        label_titulo.grid(row=1)
 
         # NOME DO USUARIO
-        self.label_usuario = Label(self.telaLogin, text="Usuario", font=("Arial",12,"bold"),padx=450)
-        self.label_usuario.grid(row=2,sticky="w")
+        label_usuario = Label(self.telaLogin, text="Usuario", font=("Arial",12,"bold"),padx=450)
+        label_usuario.grid(row=2,sticky="w")
         self.entry_usuario = Entry(self.telaLogin,font= 11, width=20,highlightbackground="#000000",highlightthickness=0.5)
         self.entry_usuario.grid(row=3,padx=50,pady=2)
 
         # SENHA DO USUARIO
-        self.label_senha = Label(self.telaLogin, text="Senha", font=("Arial",12,"bold"),padx=450)
-        self.label_senha.grid(row=4,sticky="w")
+        label_senha = Label(self.telaLogin, text="Senha", font=("Arial",12,"bold"),padx=450)
+        label_senha.grid(row=4,sticky="w")
         self.entry_senha = Entry(self.telaLogin, width=20,font= 11,highlightbackground="#000000",highlightthickness=0.5,show="•")
         self.entry_senha.grid(row=5,padx=50,pady=2)
 
         # BOTÃO ENTRAR
-        self.button_entrar = Button(self.telaLogin, text="ENTRAR", font=("Arial",12,"bold"),compound="center", command=self.verificarLogin)
-        self.button_entrar.configure(fg="White",bg="#3f9eeb", width=14)   # PAD TAMANHO DE DENTRO 
-        self.button_entrar.grid(row=6,pady=40)
+        button_entrar = Button(self.telaLogin, text="ENTRAR", font=("Arial",12,"bold"),compound="center", command=self.verificarLogin)
+        button_entrar.configure(fg="White",bg="#3f9eeb", width=14)   # PAD TAMANHO DE DENTRO 
+        button_entrar.grid(row=6,pady=40)
 
         #ACESSO AO REGISTRO
-        self.button_registrar = Button(self.telaLogin,text="Registrar-se",border=0, font=("Arial",12,"bold"), command=self.exibeTelaRegistro)
-        self.button_registrar.grid(row=7)
+        button_registrar = Button(self.telaLogin,text="Registrar-se",border=0, font=("Arial",12,"bold"), command=self.exibeTelaRegistro)
+        button_registrar.grid(row=7)
 
         self.root.bind('<Escape>', self.close)
 
     def telaRegistro(self):
         self.telaRegistro = tk.Frame(self.container)
 
-        self.espacoBranco = tk.Frame(self.telaRegistro, height=60)
-        self.espacoBranco.grid(row=0,pady=40)
+        espacoBranco = tk.Frame(self.telaRegistro, height=60)
+        espacoBranco.grid(row=0,pady=40)
 
         # NOME DO USUARIO
-        self.label_nomeUsuario = Label(self.telaRegistro, text="Nome do Usuario:", font=("Arial",12,"bold"),padx=420)
-        self.label_nomeUsuario.grid(row=1,sticky="w")
+        label_nomeUsuario = Label(self.telaRegistro, text="Nome do Usuario:", font=("Arial",12,"bold"),padx=400)
+        label_nomeUsuario.grid(row=1,sticky="w")
         self.entry_nomeUsuario = Entry(self.telaRegistro, width=20,highlightthickness=0.5, highlightbackground="black",font=12)
-        self.entry_nomeUsuario.grid(row=2,padx=420,pady=10)
+        self.entry_nomeUsuario.grid(row=2,padx=400,pady=10)
 
         # NOVA SENHA  
-        self.label_novaSenha = Label(self.telaRegistro, text="Nova Senha:", font=("Arial",12,"bold"),padx=420)
-        self.label_novaSenha.grid(row=4,sticky="w")
+        label_novaSenha = Label(self.telaRegistro, text="Nova Senha:", font=("Arial",12,"bold"),padx=400)
+        label_novaSenha.grid(row=4,sticky="w")
         self.entry_novaSenha = Entry(self.telaRegistro, width=20,highlightthickness=0.5,highlightbackground="black", font=10, show="•")
-        self.entry_novaSenha.grid(row=5, padx=420,pady=10)
+        self.entry_novaSenha.grid(row=5, padx=400,pady=10)
 
         # CONFIRMAÇÃO DA NOVA SENHA
-        self.label_confirmarSenha = Label(self.telaRegistro, text="Confirmar Senha:", font=("Arial",12,"bold"),padx=420)
-        self.label_confirmarSenha.grid(row=6,sticky="w")
+        label_confirmarSenha = Label(self.telaRegistro, text="Confirmar Senha:", font=("Arial",12,"bold"),padx=400)
+        label_confirmarSenha.grid(row=6,sticky="w")
         self.entry_confirmarSenha = Entry(self.telaRegistro,highlightthickness=0.5,font=10, highlightbackground="black", show="•")
-        self.entry_confirmarSenha.grid(row=7,padx=420,pady=10)
+        self.entry_confirmarSenha.grid(row=7,padx=400,pady=10)
 
-        self.frameBotoes = tk.Frame(self.telaRegistro)
-        self.frameBotoes.grid(row=8,column=0,columnspan=2, pady=30)
+        frameBotoes = tk.Frame(self.telaRegistro)
+        frameBotoes.grid(row=8,column=0,columnspan=2, pady=30)
 
         # BOTÃO VOLTAR
-        self.button_voltar = Button(self.frameBotoes, text="Voltar", font=("Arial",11,"bold"),width=10,command=self.exibeTelaInicio)
-        self.button_voltar.configure(fg="White",bg="#9c9c9c")  
-        self.button_voltar.grid(row=0,column=0)
+        button_voltar = Button(frameBotoes, text="Voltar", font=("Arial",11,"bold"),width=10,command=self.exibeTelaInicio)
+        button_voltar.configure(fg="White",bg="#9c9c9c")  
+        button_voltar.grid(row=0,column=0)
 
         # BOTÃO CADASTRAR
-        self.button_cadastrar = Button(self.frameBotoes, text="Cadastrar", font=("Arial",11,"bold"),width=10, command=self.cadastrar)
-        self.button_cadastrar.configure(fg="White",bg="#3f9eeb")
-        self.button_cadastrar.grid(row=0,column=1,padx=5)
+        button_cadastrar = Button(frameBotoes, text="Cadastrar", font=("Arial",11,"bold"),width=10, command=self.cadastrar)
+        button_cadastrar.configure(fg="White",bg="#3f9eeb")
+        button_cadastrar.grid(row=0,column=1,padx=5)
 
     def telaGerenciamento(self):
 
@@ -139,7 +139,6 @@ class View:
 
         self.popularTabela()
 
-        
         buttonCriarProcesso = ttk.Button(self.telaGerenciamento, text='Criar', command=self.exibeTelaCadastroProcessos)
         buttonCriarProcesso.grid(row=1, column=0, padx=5,pady=10)
 
@@ -193,6 +192,7 @@ class View:
         self.entry_espacoMemoria = Entry(self.telaCadastroProcessos, width=20,highlightthickness=0.5, highlightbackground="black",font=8)
         self.entry_espacoMemoria.grid(row=14, padx=400, pady=10)
 
+        
         button_voltar = Button(self.telaCadastroProcessos, text="Voltar", font=("Arial",11,"bold"),width=10,command=self.exibeTelaGerenciamento)
         button_voltar.configure(fg="White",bg="#9c9c9c")  
         button_voltar.grid(row=15,padx=15,pady=15)
@@ -236,7 +236,6 @@ class View:
         estado = self.select_estado.get()
         espacoMemoria = self.entry_espacoMemoria.get().strip()
         self.controllerProcessos.cadastrarProcesso(nomeProcesso, pid, nomeUsuarioUID, prioridade, usoCPU, estado, espacoMemoria)
-        self.limparCamposCadastroProcesso()
 
     def popularTabela(self):
         self.tabela.delete(*self.tabela.get_children())
@@ -254,14 +253,20 @@ class View:
     def deletarProcesso(self):
         selecionado = self.tabela.focus()
         detalhesProcesso = self.tabela.item(selecionado)
-        pid = detalhesProcesso.get('values')[1]
-        self.controllerProcessos.deletarProcesso(pid)
+        try:
+            pid = detalhesProcesso.get('values')[1]
+            self.controllerProcessos.deletarProcesso(pid)
+        except:
+            self.exibirMensagem('Selecione um processo para excluir!')
 
     def editarProcesso(self):
         selecionado = self.tabela.focus()
         detalhesProcesso = self.tabela.item(selecionado)
-        processo = detalhesProcesso.get('values')
-        self.controllerProcessos.editarProcesso(processo)
+        try:
+            processo = detalhesProcesso.get('values')
+            self.controllerProcessos.editarProcesso(processo)
+        except:
+            self.exibirMensagem('Selecione um processo para editar!')
 
     def limparCamposCadastroProcesso(self):
         self.entry_nomeProcesso.delete(0, 'end')
