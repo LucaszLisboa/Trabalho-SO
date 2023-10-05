@@ -1,5 +1,7 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+import time
+import threading
 
 class ModelProcessos:
     def __init__(self):
@@ -12,6 +14,9 @@ class ModelProcessos:
         self.estado = None
         self.espacoMemoria = None
         self.db = self.get_database()
+
+        self.iniciar_insercao_periodica_em_segundo_plano()
+        self.iniciar_troca_estado_periodicamente()
 
     def cadastrarProcesso(self, nomeProcesso, pid, nomeUsuarioUID, prioridade, usoCPU, estado, espacoMemoria):
         if(pid == '' or nomeProcesso == '' or nomeUsuarioUID == '' or prioridade == '' or usoCPU == '' or estado == '' or espacoMemoria == ''):
@@ -70,6 +75,56 @@ class ModelProcessos:
         result = processoRepository.update_one(processo, newProcesso)
         return result.modified_count
     
+    #NOME DIFF
+    #PID DIFF
+    #CPU DIFF
+    #MEMORIA DIFF
+    def inserir_processo(self):
+        repository = self.db['processos']
+        processo = {
+            "_id": str(ObjectId()),
+            "nomeProcesso": "processo",
+            "pid": 123,
+            "nomeUsuarioUID": "usuario",
+            "prioridade": 1,
+            "usoCPU": 1,
+            "estado": "Pronto",
+            "espacoMemoria": 1
+        }
+        repository.insert_one(processo)
+
+    def inserirProcessoPeriodicamente(self, limite=10, intervalo=5):
+        num_insercoes = 0
+        while num_insercoes < limite:
+            self.inserir_processo()
+            num_insercoes += 1
+            time.sleep(intervalo)
+
+    def iniciar_insercao_periodica_em_segundo_plano(self):
+        insercao_thread = threading.Thread(target=self.inserirProcessoPeriodicamente)
+        insercao_thread.daemon = True
+        insercao_thread.start()
+
+    def trocaEstadoProcessoExecucao(self, estado):
+        processoRepository = self.db['processos']
+        filtro = {"estado": "Pronto"}
+        newProcesso = { "$set": { 
+            "estado": estado
+            } 
+        }
+        result = processoRepository.update_many(filtro, newProcesso)
+        return result.modified_count
+    
+    def teste(self, intervalo=5):
+        while 1:
+            self.trocaEstadoProcessoExecucao("Execução")
+            time.sleep(intervalo)
+
+    def iniciar_troca_estado_periodicamente(self):
+        troca_thread = threading.Thread(target=self.teste)
+        troca_thread.daemon = True
+        troca_thread.start()
+
 
         
     def get_database(self):

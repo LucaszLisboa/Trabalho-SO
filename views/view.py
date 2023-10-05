@@ -249,6 +249,7 @@ class View:
             usoCPU = processo['usoCPU']
             espacoMemoria = processo['espacoMemoria']
             self.tabela.insert("", "end", values=(nomeProcesso, PID, status, nomeUsuarioUID, prioridade, usoCPU, espacoMemoria))
+        self.root.after(5000, self.popularTabela)
 
     def deletarProcesso(self):
         selecionado = self.tabela.focus()
