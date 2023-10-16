@@ -1,5 +1,5 @@
-from pymongo import MongoClient
 from bson.objectid import ObjectId
+from database.database import Database
 import hashlib
 import datetime
 
@@ -9,7 +9,7 @@ class ModelUser:
         self.nome = None
         self.senha = None
         self.dataCadastro = None
-        self.db = self.get_database()
+        self.db = Database().get_database()
 
     def cadastrarUsuario(self, nome, senha, confirmacaoSenha):
         existeCadastro = self.validaCadastro(nome)
@@ -33,15 +33,8 @@ class ModelUser:
         else:
             user = "usuario_ja_cadastrado"
         return user
-               
-
-    
-    def get_database(self):
-        CONNECTION_STRING = 'mongodb://localhost:27017'
-        client = MongoClient(CONNECTION_STRING)
-        return client['Sistema_Operacional']
-    
-    
+            
+     
     def validaCadastro(self, nome):
         collection = self.db['usuarios']
         registro = collection.find_one({"nome": nome})
