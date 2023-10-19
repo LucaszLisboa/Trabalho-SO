@@ -9,12 +9,14 @@ from tkinter import ttk
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from controllers.controllerUser import ControllerUser
 from controllers.controllerProcessos import ControllerProcessos
+from controllers.controllerThreading import ControllerThreading
 
 class View:
     def __init__(self):
         self.root = tk.Tk()
         self.controller = ControllerUser(self)  
         self.controllerProcessos = ControllerProcessos(self)    
+        self.controllerThreading = ControllerThreading(self)
 
         self.root.title("Sistemas Operacionais")
         self.root.geometry("1000x680")
@@ -218,6 +220,7 @@ class View:
         self.telaCadastroProcessos.tkraise()
 
     def exibeTelaGerenciamento(self):
+        self.controllerThreading.iniciar_insercao_periodica_em_segundo_plano()
         self.popularTabela()
         self.telaGerenciamento.tkraise()
 
