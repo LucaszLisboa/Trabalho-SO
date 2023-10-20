@@ -16,39 +16,48 @@ class ThreadingProcessos:
     insercao_thread.start()
 
   def inserir_processo_periodicamente(self, limite=10, intervalo=5):
-    while self.num_insercoes < limite:
+    while True:
+      time.sleep(intervalo)
       self.inserir_processo()
       self.num_insercoes += 1
-      time.sleep(intervalo)
       lista_processos = list(self.db['processos'].find())
+      time.sleep(5)
       self.iniciar_verificacao_estados(lista_processos)
-    if self.num_insercoes == limite:
-      self.num_insercoes -= 1
-      self.delete_one_processo()
+      if self.num_insercoes > 5:
+        self.delete_one_processo()
         
   def iniciar_verificacao_estados(self, lista_processos):
+    repository = self.db['processos']
     for processo in lista_processos:
       if processo["estado"] == "Início":
-        thread = threading.Thread(target=self.troca_estado_processo, args=(processo, "Início", "Pronto"))
-        thread.daemon = True
-        thread.start()
-      elif processo["estado"] == "Pronto":
-        thread = threading.Thread(target=self.troca_estado_processo, args=(processo, "Pronto", "Execução"))
-        thread.daemon = True
-        thread.start()
-      elif processo["estado"] == "Execução":
-        thread = threading.Thread(target=self.troca_estado_processo, args=(processo, "Execução", "Espera"))
-        thread.daemon = True
-        thread.start()
-      elif processo["estado"] == "Espera":
-        thread = threading.Thread(target=self.troca_estado_processo, args=(processo, "Espera", "Pronto"))
-        thread.daemon = True
-        thread.start()
-      elif processo["estado"] == "Execução" and self.num_insercoes == 9:
-        thread = threading.Thread(target=self.troca_estado_processo, args=(processo, "Execução", "Fim"))
-        thread.daemon = True
-        thread.start()
+        filtro = {"estado": "Início"}
+        newProcesso = { "$set": {"estado": "Pronto"}}
+        repository.update_one(filtro, newProcesso)
 
+      elif processo["estado"] == "Execução":
+        filtro = {"estado": "Execução"}
+        if self.num_insercoes >= 5:
+          newProcesso = { "$set": {"estado": "Fim" }}
+        else:
+          newProcesso = { "$set": {"estado": "Espera"}}
+        repository.update_one(filtro, newProcesso)
+
+      elif processo["estado"] == "Pronto":
+        # Encontre um único processo em estado "Pronto" e atualize para "Execução"
+        processoEmExecucao = repository.find_one({"estado": "Execução"})
+        if processoEmExecucao is None:
+            filtro = {"_id": processo["_id"]}
+            newProcesso = { "$set": {"estado": "Execução"}}
+            repository.update_one(filtro, newProcesso)
+        else:
+            filtro = {"estado": "Pronto"}
+            newProcesso = { "$set": {"estado": "Pronto"}}
+            repository.update_one(filtro, newProcesso)
+
+      elif processo["estado"] == "Espera":
+        filtro = {"estado": "Espera"}
+        newProcesso = {"$set": {"estado": "Pronto"}}
+        repository.update_one(filtro, newProcesso)
   
   def inserir_processo(self):
     repository = self.db['processos']
@@ -65,32 +74,9 @@ class ThreadingProcessos:
     repository.insert_one(processo)
     return processo
 
-
-  def troca_estado_processo(self, processo, estadoAtual, estadoNovo):
-    while True:
-      processoRepository = self.db['processos']
-      filtro = {"estado": estadoAtual}
-      newProcesso = { "$set": { 
-          "estado": estadoNovo
-          } 
-      }
-      if estadoNovo == "Execução":
-        # Encontre um único processo em estado "Pronto" e atualize para "Execução"
-        processoEmExecução = processoRepository.find_one({"estado": "Execução"})
-        if processoEmExecução is None:
-          filtro["_id"] = processo["_id"]
-          processoRepository.update_one(filtro, newProcesso)
-        else:
-          print("Já existe um processo em execução")
-      else:
-          # Atualize todos os processos no estado atual para o novo estado
-          processoRepository.update_one(filtro, newProcesso)
-      time.sleep(5)
-
-
   def delete_one_processo(self):
     processoRepository = self.db['processos']
-    processoRepository.delete_one({"estado": "Pronto"})
+    processoRepository.delete_one({"estado": "Fim"})
     self.inserir_processo_periodicamente()
 
   
