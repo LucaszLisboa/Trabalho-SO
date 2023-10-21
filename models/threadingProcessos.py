@@ -7,7 +7,7 @@ from database.database import Database
 class ThreadingProcessos:
   def __init__(self):
     self.db = Database().get_database()
-    self.nomesProcessos = ['bash.exe', 'python.exe', 'chrome.exe', 'code.exe', 'blitz.exe', 'explorer.exe', 'msedge.exe', 'mysql.exe', 'mongo.exe', 'excel.exe', 'word.exe', 'powerpoint.exe', 'notepad.exe', 'cmd.exe', 'java.exe', 'node.exe', 'php.exe', 'c++.exe', 'c.exe', 'c#.exe', 'ruby.exe', 'rust.exe', 'go.exe', 'dart.exe', 'flutter.exe', 'android.exe', 'ios.exe', 'ubuntu.exe', 'debian.exe', 'linux.exe', 'windows.exe', 'mac.exe', 'ios.exe']
+    self.nomesProcessos = ['bash.exe', 'python.exe', 'chrome.exe', 'code.exe', 'blitz.exe', 'explorer.exe', 'msedge.exe', 'mysql.exe', 'mongo.exe', 'excel.exe', 'word.exe', 'powerpoint.exe', 'notepad.exe', 'cmd.exe', 'java.exe', 'node.exe', 'php.exe', 'c++.exe', 'c.exe', 'c#.exe', 'ruby.exe', 'rust.exe', 'go.exe', 'dart.exe', 'flutter.exe', 'android.exe', 'ios.exe', 'ubuntu.exe', 'debian.exe', 'linux.exe', 'windows.exe', 'mac.exe', 'ios.exe', 'android.exe', 'react.exe', 'vue.exe', 'angular.exe', 'svelte.exe', 'laravel.exe', 'django.exe', 'flask.exe', 'spring.exe', 'express.exe']
     self.num_insercoes = 0
 
   def iniciar_insercao_periodica_em_segundo_plano(self):
@@ -15,15 +15,19 @@ class ThreadingProcessos:
     insercao_thread.daemon = True
     insercao_thread.start()
 
-  def inserir_processo_periodicamente(self, limite=10, intervalo=5):
+  def inserir_processo_periodicamente(self, intervalo=5):
     while True:
-      self.inserir_processo()
-      self.num_insercoes += 1
-      time.sleep(intervalo)
-      lista_processos = list(self.db['processos'].find())
-      self.iniciar_verificacao_estados(lista_processos)
-      time.sleep(intervalo)
-      self.delete_one_processo()
+      tem_estado_fim = self.db['processos'].find_one({"estado": "Fim"})
+      if tem_estado_fim is None:
+        self.inserir_processo()
+        self.num_insercoes += 1
+        time.sleep(intervalo)
+        lista_processos = list(self.db['processos'].find())
+        self.iniciar_verificacao_estados(lista_processos)
+      if tem_estado_fim is not None:
+        time.sleep(intervalo)
+        self.delete_one_processo()
+        self.num_insercoes -= 1
         
   def iniciar_verificacao_estados(self, lista_processos):
     repository = self.db['processos']
