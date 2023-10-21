@@ -17,46 +17,60 @@ class ThreadingProcessos:
 
   def inserir_processo_periodicamente(self, limite=10, intervalo=5):
     while True:
-      time.sleep(intervalo)
       self.inserir_processo()
       self.num_insercoes += 1
+      time.sleep(intervalo)
       lista_processos = list(self.db['processos'].find())
-      time.sleep(5)
       self.iniciar_verificacao_estados(lista_processos)
-      if self.num_insercoes > 5:
-        self.delete_one_processo()
+      time.sleep(intervalo)
+      self.delete_one_processo()
         
   def iniciar_verificacao_estados(self, lista_processos):
     repository = self.db['processos']
     for processo in lista_processos:
-      if processo["estado"] == "Início":
-        filtro = {"estado": "Início"}
+      if processo.get("completou_ciclo", False) == True:
+        if processo["estado"] == "Execução":
+          filtro = {"_id": processo["_id"]}
+          newProcesso = {"$set": {"estado": "Fim"}}
+          repository.update_one(filtro, newProcesso)
+        else:
+          processoEmExecucao = repository.find_one({"estado": "Execução"})
+          if processoEmExecucao is not None:
+            filtro = {"_id": processoEmExecucao["_id"]}
+            newProcesso = {"$set": {"estado": "Espera"}}
+            repository.update_one(filtro, newProcesso)
+  
+          filtro = {"_id": processo["_id"]}
+          newProcesso = {"$set": {"estado": "Execução"}}
+          repository.update_one(filtro, newProcesso)
+
+      elif processo["estado"] == "Início":
+        filtro = {"_id": processo["_id"]}
         newProcesso = { "$set": {"estado": "Pronto"}}
         repository.update_one(filtro, newProcesso)
 
       elif processo["estado"] == "Execução":
-        filtro = {"estado": "Execução"}
-        if self.num_insercoes >= 5:
+        filtro = {"_id": processo["_id"]}
+        if processo.get("completou_ciclo", False) == True: 
           newProcesso = { "$set": {"estado": "Fim" }}
         else:
           newProcesso = { "$set": {"estado": "Espera"}}
         repository.update_one(filtro, newProcesso)
 
       elif processo["estado"] == "Pronto":
-        # Encontre um único processo em estado "Pronto" e atualize para "Execução"
         processoEmExecucao = repository.find_one({"estado": "Execução"})
         if processoEmExecucao is None:
             filtro = {"_id": processo["_id"]}
             newProcesso = { "$set": {"estado": "Execução"}}
             repository.update_one(filtro, newProcesso)
         else:
-            filtro = {"estado": "Pronto"}
+            filtro = {"_id": processo["_id"]}
             newProcesso = { "$set": {"estado": "Pronto"}}
             repository.update_one(filtro, newProcesso)
 
       elif processo["estado"] == "Espera":
-        filtro = {"estado": "Espera"}
-        newProcesso = {"$set": {"estado": "Pronto"}}
+        filtro = {"_id": processo["_id"]}
+        newProcesso = {"$set": {"estado": "Pronto", "completou_ciclo": True}}
         repository.update_one(filtro, newProcesso)
   
   def inserir_processo(self):
