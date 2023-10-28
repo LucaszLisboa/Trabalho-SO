@@ -48,9 +48,6 @@ class View:
     def telaLogin(self):
         self.telaLogin =tk.Frame(self.container)
 
-        #self.espacoBranco = tk.Frame(self.telaLogin, height=60)
-        #self.espacoBranco.grid(row=0)
-
         label_titulo = Label(self.telaLogin,text="Sistemas\nOperacionais", font=("Arial",26),padx=30,pady=50,anchor="center",fg="#000000")
         label_titulo.grid(row=1)
 

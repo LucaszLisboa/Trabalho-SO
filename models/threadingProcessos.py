@@ -17,17 +17,17 @@ class ThreadingProcessos:
 
   def inserir_processo_periodicamente(self, intervalo=5):
     while True:
-      tem_estado_fim = self.db['processos'].find_one({"estado": "Fim"})
-      if tem_estado_fim is None:
+      if self.num_insercoes < 10:
         self.inserir_processo()
         self.num_insercoes += 1
         time.sleep(intervalo)
         lista_processos = list(self.db['processos'].find())
-        self.iniciar_verificacao_estados(lista_processos)
+      self.iniciar_verificacao_estados(lista_processos)
+      tem_estado_fim = self.db['processos'].find_one({"estado": "Fim"})
       if tem_estado_fim is not None:
         time.sleep(intervalo)
-        self.delete_one_processo()
         self.num_insercoes -= 1
+        self.delete_one_processo()
         
   def iniciar_verificacao_estados(self, lista_processos):
     repository = self.db['processos']
@@ -55,7 +55,7 @@ class ThreadingProcessos:
 
       elif processo["estado"] == "Execução":
         filtro = {"_id": processo["_id"]}
-        if processo.get("completou_ciclo", False) == True: 
+        if self.num_insercoes == 10: 
           newProcesso = { "$set": {"estado": "Fim" }}
         else:
           newProcesso = { "$set": {"estado": "Espera"}}
@@ -96,5 +96,3 @@ class ThreadingProcessos:
     processoRepository = self.db['processos']
     processoRepository.delete_one({"estado": "Fim"})
     self.inserir_processo_periodicamente()
-
-  
